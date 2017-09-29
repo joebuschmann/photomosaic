@@ -42,27 +42,27 @@ namespace PhotoMosaic.Tests
         [Test]
         public void ValidateToArray()
         {
-            int[] colors = _bitmap.ToArray();
+            Color[] colors = _bitmap.ToArray();
 
             for (int i = 0; i < colors.Length; i++)
             {
-                Assert.That(colors[i], Is.EqualTo(i));
+                Assert.That(colors[i].ToArgb(), Is.EqualTo(i));
             }
         }
 
         [Test]
         public void ValidateToArrayWithRect()
         {
-            int[] colors = _bitmap.ToArray(new Rectangle(4, 2, 2, 3));
+            Color[] colors = _bitmap.ToArray(new Rectangle(4, 2, 2, 3));
 
             Assert.That(colors.Length, Is.EqualTo(6));
 
-            Assert.That(colors[0], Is.EqualTo(24));
-            Assert.That(colors[1], Is.EqualTo(25));
-            Assert.That(colors[2], Is.EqualTo(34));
-            Assert.That(colors[3], Is.EqualTo(35));
-            Assert.That(colors[4], Is.EqualTo(44));
-            Assert.That(colors[5], Is.EqualTo(45));
+            Assert.That(colors[0].ToArgb(), Is.EqualTo(24));
+            Assert.That(colors[1].ToArgb(), Is.EqualTo(25));
+            Assert.That(colors[2].ToArgb(), Is.EqualTo(34));
+            Assert.That(colors[3].ToArgb(), Is.EqualTo(35));
+            Assert.That(colors[4].ToArgb(), Is.EqualTo(44));
+            Assert.That(colors[5].ToArgb(), Is.EqualTo(45));
         }
     }
 }

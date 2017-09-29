@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using NUnit.Framework;
 using PhotoMosaic.App;
 
@@ -10,6 +8,7 @@ namespace PhotoMosaic.Tests
     public class PhotoMosaicLibTests
     {
         private Bitmap _bitmap;
+        private readonly PhotoMosaicLib _photoMosaicLib = new PhotoMosaicLib();
 
         [SetUp]
         public void CreateTestBitmap()
@@ -36,7 +35,10 @@ namespace PhotoMosaic.Tests
             {
                 for (int x = 0; x < 10; x++)
                 {
-                    _bitmap.SetPixel(x, y, Color.FromArgb(color));
+                    // Assign ARGB values based on color integer.
+                    // Stagger the values by 10s to vary the average.
+                    int a = color, r = color + 10, g = color + 20, b = color + 30;
+                    _bitmap.SetPixel(x, y, Color.FromArgb(a, r, g, b));
                     color++;
                 }
             }
@@ -45,10 +47,12 @@ namespace PhotoMosaic.Tests
         [Test]
         public void CalculateAverageColor()
         {
-            PhotoMosaicLib photoMosaicLib = new PhotoMosaicLib();
-            int color = photoMosaicLib.CalculateAverageColor(_bitmap, new Size(3, 3));
+            Color color = _photoMosaicLib.CalculateAverageColor(_bitmap, new Size(3, 3));
 
-            Assert.That(color, Is.EqualTo(49));
+            Assert.AreEqual(49, color.A);
+            Assert.AreEqual(60, color.R);
+            Assert.AreEqual(70, color.G);
+            Assert.AreEqual(80, color.B);
         }
 
         [Test]
@@ -65,14 +69,105 @@ namespace PhotoMosaic.Tests
                 }
             }
 
-            PhotoMosaicLib photoMosaicLib = new PhotoMosaicLib();
-            int color = photoMosaicLib.CalculateAverageColor(bitmap);
-            Color actualColor = Color.FromArgb(color);
+            Color color = _photoMosaicLib.CalculateAverageColor(bitmap);
 
-            Assert.That(actualColor.A, Is.EqualTo(expectedColor.A));
-            Assert.That(actualColor.B, Is.EqualTo(expectedColor.B));
-            Assert.That(actualColor.G, Is.EqualTo(expectedColor.G));
-            Assert.That(actualColor.R, Is.EqualTo(expectedColor.R));
+            Assert.That(color.A, Is.EqualTo(expectedColor.A));
+            Assert.That(color.B, Is.EqualTo(expectedColor.B));
+            Assert.That(color.G, Is.EqualTo(expectedColor.G));
+            Assert.That(color.R, Is.EqualTo(expectedColor.R));
+        }
+
+        [Test]
+        public void ExtractCenteredImageFromWideImage()
+        {
+            Bitmap bitmap = new Bitmap(10, 3);
+            int color = 0;
+
+            for (int y = 0; y < 3; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                    {
+                    bitmap.SetPixel(x, y, Color.FromArgb(0, 0, color));
+                    color++;
+                }
+            }
+
+            Bitmap centeredImage = _photoMosaicLib.ExtractCenteredImage(bitmap, new Size(3, 3));
+
+            Assert.AreEqual(3, centeredImage.GetPixel(0, 0).B);
+            Assert.AreEqual(4, centeredImage.GetPixel(1, 0).B);
+            Assert.AreEqual(5, centeredImage.GetPixel(2, 0).B);
+
+            Assert.AreEqual(13, centeredImage.GetPixel(0, 1).B);
+            Assert.AreEqual(14, centeredImage.GetPixel(1, 1).B);
+            Assert.AreEqual(15, centeredImage.GetPixel(2, 1).B);
+
+            Assert.AreEqual(23, centeredImage.GetPixel(0, 2).B);
+            Assert.AreEqual(24, centeredImage.GetPixel(1, 2).B);
+            Assert.AreEqual(25, centeredImage.GetPixel(2, 2).B);
+        }
+
+        [Test]
+        public void ExtractCenteredImageFromTallImage()
+        {
+            Bitmap bitmap = new Bitmap(3, 10);
+            int color = 0;
+
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    bitmap.SetPixel(x, y, Color.FromArgb(0, 0, color));
+                    color++;
+                }
+            }
+
+            Bitmap centeredImage = _photoMosaicLib.ExtractCenteredImage(bitmap, new Size(3, 3));
+
+            Assert.AreEqual(9, centeredImage.GetPixel(0, 0).B);
+            Assert.AreEqual(10, centeredImage.GetPixel(1, 0).B);
+            Assert.AreEqual(11, centeredImage.GetPixel(2, 0).B);
+
+            Assert.AreEqual(12, centeredImage.GetPixel(0, 1).B);
+            Assert.AreEqual(13, centeredImage.GetPixel(1, 1).B);
+            Assert.AreEqual(14, centeredImage.GetPixel(2, 1).B);
+
+            Assert.AreEqual(15, centeredImage.GetPixel(0, 2).B);
+            Assert.AreEqual(16, centeredImage.GetPixel(1, 2).B);
+            Assert.AreEqual(17, centeredImage.GetPixel(2, 2).B);
+        }
+
+        [Test]
+        public void CreateThumbnail()
+        {
+            Bitmap bitmap = new Bitmap(3, 10);
+            int color = 0;
+
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    bitmap.SetPixel(x, y, Color.FromArgb(0, 0, color));
+                    color++;
+                }
+            }
+
+            Size size = new Size(3, 3);
+            Bitmap thumbnailImage = new Bitmap(_photoMosaicLib.GetCenteredThumbnail(bitmap, size));
+            
+            Assert.AreEqual(size, thumbnailImage.Size);
+
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(0, 0).ToArgb());
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(1, 0).ToArgb());
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(2, 0).ToArgb());
+
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(0, 1).ToArgb());
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(1, 1).ToArgb());
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(2, 1).ToArgb());
+
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(0, 2).ToArgb());
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(1, 2).ToArgb());
+            Assert.AreNotEqual(0, thumbnailImage.GetPixel(2, 2).ToArgb());
         }
     }
 }

@@ -32,9 +32,11 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelColor = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonCalculateEquivalentColor = new System.Windows.Forms.Button();
+            this.buttonLoadFile = new System.Windows.Forms.Button();
+            this.openImageFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.buttonAnalyzeFiles = new System.Windows.Forms.Button();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -52,7 +54,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 505F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 366F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(623, 366);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -79,38 +81,52 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.buttonAnalyzeFiles);
+            this.panel2.Controls.Add(this.buttonCalculateEquivalentColor);
+            this.panel2.Controls.Add(this.buttonLoadFile);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(0, 366);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(623, 48);
             this.panel2.TabIndex = 0;
             // 
-            // button1
+            // buttonCalculateEquivalentColor
             // 
-            this.button1.Location = new System.Drawing.Point(529, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Load File";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonCalculateEquivalentColor.Location = new System.Drawing.Point(453, 13);
+            this.buttonCalculateEquivalentColor.Name = "buttonCalculateEquivalentColor";
+            this.buttonCalculateEquivalentColor.Size = new System.Drawing.Size(75, 23);
+            this.buttonCalculateEquivalentColor.TabIndex = 1;
+            this.buttonCalculateEquivalentColor.Text = "Calculate";
+            this.buttonCalculateEquivalentColor.UseVisualStyleBackColor = true;
+            this.buttonCalculateEquivalentColor.Click += new System.EventHandler(this.button2_Click);
             // 
-            // openFileDialog1
+            // buttonLoadFile
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
+            this.buttonLoadFile.Location = new System.Drawing.Point(529, 13);
+            this.buttonLoadFile.Name = "buttonLoadFile";
+            this.buttonLoadFile.Size = new System.Drawing.Size(75, 23);
+            this.buttonLoadFile.TabIndex = 0;
+            this.buttonLoadFile.Text = "Load File";
+            this.buttonLoadFile.UseVisualStyleBackColor = true;
+            this.buttonLoadFile.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button2
+            // openImageFileDialog
             // 
-            this.button2.Location = new System.Drawing.Point(453, 13);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Calculate";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.openImageFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
+            // 
+            // buttonAnalyzeFiles
+            // 
+            this.buttonAnalyzeFiles.Location = new System.Drawing.Point(372, 13);
+            this.buttonAnalyzeFiles.Name = "buttonAnalyzeFiles";
+            this.buttonAnalyzeFiles.Size = new System.Drawing.Size(75, 23);
+            this.buttonAnalyzeFiles.TabIndex = 2;
+            this.buttonAnalyzeFiles.Text = "Analyze";
+            this.buttonAnalyzeFiles.UseVisualStyleBackColor = true;
+            this.buttonAnalyzeFiles.Click += new System.EventHandler(this.buttonAnalyzeFiles_Click);
+            // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.ShowNewFolderButton = false;
             // 
             // Form1
             // 
@@ -134,9 +150,11 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panelColor;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonLoadFile;
+        private System.Windows.Forms.OpenFileDialog openImageFileDialog;
+        private System.Windows.Forms.Button buttonCalculateEquivalentColor;
+        private System.Windows.Forms.Button buttonAnalyzeFiles;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
     }
 }
 
