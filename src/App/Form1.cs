@@ -46,14 +46,20 @@ namespace App
 
         private void AnalyzeFiles(string folderPath)
         {
-            
             string destFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
                                     "\\resized-images\\" + DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss");
             Directory.CreateDirectory(destFolderPath);
 
-            string[] allFiles = Directory.EnumerateFiles(folderPath, "*.png", SearchOption.AllDirectories).ToArray();
-//            var processorCount = Environment.ProcessorCount;
-            var processorCount = 1;
+            string[] allFiles = Directory
+                .EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
+                .Where(p =>
+                {
+                    var extension = Path.GetExtension(p);
+                    return extension == ".png" || extension == ".jpg";
+                })
+                .ToArray();
+
+            var processorCount = Environment.ProcessorCount;
 
             for (int i = 0; i < allFiles.Length; i += processorCount)
             {
@@ -61,23 +67,12 @@ namespace App
                 Array.Copy(allFiles, i, currentFiles, 0, processorCount);
                 CreateAndSaveThumbnails(currentFiles, destFolderPath);
             }
-
-//            ImageInfo[] images = Directory
-//                .EnumerateFiles(folderPath, "*.png", SearchOption.AllDirectories)
-//                .AsParallel()
-//                .Select(path => CreateThumbnail(path, size))
-//                .ToArray();
-//
-//            foreach (var image in images)
-//            {
-//                image.Image.Save(destFolderPath + "\\" + image.Name);
-//            }
         }
 
         private void CreateAndSaveThumbnails(string[] currentFiles, string destFolderPath)
         {
             ImageInfo[] images = currentFiles
-//                .AsParallel()
+                .AsParallel()
                 .Select(CreateThumbnail)
                 .ToArray();
             
