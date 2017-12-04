@@ -16,7 +16,8 @@ namespace PhotoMosaic.App
 
             public int Count { get; private set; }
 
-            public int Average {
+            public int Average
+            {
                 get
                 {
                     if (Count == 0)
@@ -42,7 +43,7 @@ namespace PhotoMosaic.App
 
         public Color CalculateMostFrequentColor(Bitmap image, byte binSize)
         {
-            int binCount = (int)Math.Ceiling(Convert.ToDouble(byte.MaxValue) / binSize);
+            int binCount = (int) Math.Ceiling(Convert.ToDouble(byte.MaxValue) / binSize);
             int GetBin(byte bite) => Math.Max((int) Math.Ceiling(Convert.ToDouble(bite) / binSize) - 1, 0);
             Bin[] a = new Bin[binCount];
             Bin[] r = new Bin[binCount];
@@ -110,16 +111,14 @@ namespace PhotoMosaic.App
             return CalculateAverageColor(image, new Size(10, 10));
         }
 
-        public Color CalculateAverageColor(Bitmap image, Size chunkSize)
+        public Color CalculateAverageColor(Bitmap image, Size blockSize)
         {
-            int currentX = 0, currentY = 0;
             double pixelCount = (image.Height * image.Width);
             double avgR = 0d, avgG = 0d, avgB = 0d, avgA = 0d;
 
-            while (currentY < image.Height)
+            image.IterateBitmapByBlocks(blockSize, (rect, pixels) =>
             {
                 long r = 0, g = 0, b = 0, a = 0;
-                var pixels = image.ToArray(new Rectangle(new Point(currentX, currentY), chunkSize));
 
                 foreach (var pixel in pixels)
                 {
@@ -133,21 +132,42 @@ namespace PhotoMosaic.App
                 avgG += g / pixelCount;
                 avgB += b / pixelCount;
                 avgA += a / pixelCount;
-
-                currentX += chunkSize.Width;
-
-                if (currentX >= image.Width)
-                {
-                    currentX = 0;
-                    currentY += chunkSize.Height;
-                }
-            }
+            });
 
             return Color.FromArgb(
                 (int) Math.Round(avgA),
                 (int) Math.Round(avgR),
                 (int) Math.Round(avgG),
                 (int) Math.Round(avgB));
+        }
+
+        public void CalculateAverageColorByBlock(Bitmap image, Size blockSize, Action<Rectangle, Color> action)
+        {
+            if (action == null)
+                return;
+
+            image.IterateBitmapByBlocks(blockSize, (rect, pixels) =>
+            {
+                double pixelCount = rect.Width * rect.Height;
+                long r = 0, g = 0, b = 0, a = 0;
+
+                foreach (var pixel in pixels)
+                {
+                    r += pixel.R;
+                    g += pixel.G;
+                    b += pixel.B;
+                    a += pixel.A;
+                }
+
+                var avgA = (int)Math.Round(a / pixelCount);
+                var avgR = (int)Math.Round(r / pixelCount);
+                var avgG = (int)Math.Round(g / pixelCount);
+                var avgB = (int)Math.Round(b / pixelCount);
+
+                Color avgPixel = Color.FromArgb(avgA, avgR, avgG, avgB);
+
+                action(rect, avgPixel);
+            });
         }
 
         public Image GetCenteredThumbnail(Bitmap image, Size thumbnailSize)
@@ -157,7 +177,8 @@ namespace PhotoMosaic.App
 
             using (var centeredImage = ExtractCenteredImage(image, centeredSize))
             {
-                return centeredImage.GetThumbnailImage(thumbnailSize.Width, thumbnailSize.Height, () => false, IntPtr.Zero);
+                return centeredImage.GetThumbnailImage(thumbnailSize.Width, thumbnailSize.Height, () => false,
+                    IntPtr.Zero);
             }
         }
 

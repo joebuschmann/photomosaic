@@ -1,4 +1,4 @@
-﻿namespace App
+﻿namespace PhotoMosaic.App
 {
     partial class Form1
     {
@@ -32,11 +32,12 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelColor = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.buttonAnalyzeFiles = new System.Windows.Forms.Button();
             this.buttonCalculateEquivalentColor = new System.Windows.Forms.Button();
             this.buttonLoadFile = new System.Windows.Forms.Button();
             this.openImageFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.buttonAnalyzeFiles = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.buttonChooseTargetImage = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -81,6 +82,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.buttonChooseTargetImage);
             this.panel2.Controls.Add(this.buttonAnalyzeFiles);
             this.panel2.Controls.Add(this.buttonCalculateEquivalentColor);
             this.panel2.Controls.Add(this.buttonLoadFile);
@@ -89,6 +91,16 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(623, 48);
             this.panel2.TabIndex = 0;
+            // 
+            // buttonAnalyzeFiles
+            // 
+            this.buttonAnalyzeFiles.Location = new System.Drawing.Point(372, 13);
+            this.buttonAnalyzeFiles.Name = "buttonAnalyzeFiles";
+            this.buttonAnalyzeFiles.Size = new System.Drawing.Size(75, 23);
+            this.buttonAnalyzeFiles.TabIndex = 2;
+            this.buttonAnalyzeFiles.Text = "Analyze";
+            this.buttonAnalyzeFiles.UseVisualStyleBackColor = true;
+            this.buttonAnalyzeFiles.Click += new System.EventHandler(this.buttonAnalyzeFiles_Click);
             // 
             // buttonCalculateEquivalentColor
             // 
@@ -114,19 +126,19 @@
             // 
             this.openImageFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
             // 
-            // buttonAnalyzeFiles
-            // 
-            this.buttonAnalyzeFiles.Location = new System.Drawing.Point(372, 13);
-            this.buttonAnalyzeFiles.Name = "buttonAnalyzeFiles";
-            this.buttonAnalyzeFiles.Size = new System.Drawing.Size(75, 23);
-            this.buttonAnalyzeFiles.TabIndex = 2;
-            this.buttonAnalyzeFiles.Text = "Analyze";
-            this.buttonAnalyzeFiles.UseVisualStyleBackColor = true;
-            this.buttonAnalyzeFiles.Click += new System.EventHandler(this.buttonAnalyzeFiles_Click);
-            // 
             // folderBrowserDialog
             // 
             this.folderBrowserDialog.ShowNewFolderButton = false;
+            // 
+            // buttonChooseTargetImage
+            // 
+            this.buttonChooseTargetImage.Location = new System.Drawing.Point(278, 13);
+            this.buttonChooseTargetImage.Name = "buttonChooseTargetImage";
+            this.buttonChooseTargetImage.Size = new System.Drawing.Size(88, 23);
+            this.buttonChooseTargetImage.TabIndex = 3;
+            this.buttonChooseTargetImage.Text = "Select Image";
+            this.buttonChooseTargetImage.UseVisualStyleBackColor = true;
+            this.buttonChooseTargetImage.Click += new System.EventHandler(this.buttonChooseTargetImage_Click);
             // 
             // Form1
             // 
@@ -155,6 +167,7 @@
         private System.Windows.Forms.Button buttonCalculateEquivalentColor;
         private System.Windows.Forms.Button buttonAnalyzeFiles;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.Button buttonChooseTargetImage;
     }
 }
 

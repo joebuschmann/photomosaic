@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using NUnit.Framework;
 using PhotoMosaic.App;
 
@@ -13,21 +14,6 @@ namespace PhotoMosaic.Tests
         [SetUp]
         public void CreateTestBitmap()
         {
-            /*
-                    0  1  2  3  4  5  6  7  8  9
-                    =  =  =  =  =  =  =  =  =  =
-                 0| 0  1  2  3  4  5  6  7  8  9
-                 1|10 11 12 13 14 15 16 17 18 19
-                 2|20 21 22 23 24 25 26 27 28 29
-                 3|30 31 32 33 34 35 36 37 38 39
-                 4|40 41 42 43 44 45 46 47 48 49
-                 5|50 51 52 53 54 55 56 57 58 59
-                 6|60 61 62 63 64 65 66 67 68 69
-                 7|70 71 72 73 74 75 76 77 78 79
-                 8|80 81 82 83 84 85 86 87 88 89
-                 9|90 91 92 93 94 95 96 97 98 99
-            */
-
             _bitmap = new Bitmap(10, 10);
             int color = 0;
 
@@ -41,6 +27,25 @@ namespace PhotoMosaic.Tests
                     _bitmap.SetPixel(x, y, Color.FromArgb(a, r, g, b));
                     color++;
                 }
+            }
+        }
+
+        [Test]
+        public void CalculateAverageColorByBlock()
+        {
+            var expectedPixels = GetExpectedAvgColorByBlock();
+            var actualPixels = new List<Color>();
+
+            _photoMosaicLib.CalculateAverageColorByBlock(_bitmap, new Size(3, 3), (rect, pixel) =>
+            {
+                actualPixels.Add(pixel);
+            });
+
+            Assert.AreEqual(expectedPixels.Count, actualPixels.Count);
+
+            for (int i = 0; i < expectedPixels.Count; i++)
+            {
+                Assert.AreEqual(expectedPixels[i], actualPixels[i]);
             }
         }
 
@@ -168,6 +173,29 @@ namespace PhotoMosaic.Tests
             Assert.AreNotEqual(0, thumbnailImage.GetPixel(0, 2).ToArgb());
             Assert.AreNotEqual(0, thumbnailImage.GetPixel(1, 2).ToArgb());
             Assert.AreNotEqual(0, thumbnailImage.GetPixel(2, 2).ToArgb());
+        }
+
+        private List<Color> GetExpectedAvgColorByBlock()
+        {
+            return new List<Color>
+            {
+                Color.FromArgb(11, 21, 31, 41),
+                Color.FromArgb(14, 24, 34, 44),
+                Color.FromArgb(17, 27, 37, 47),
+                Color.FromArgb(19, 29, 39, 49),
+                Color.FromArgb(41, 51, 61, 71),
+                Color.FromArgb(44, 54, 64, 74),
+                Color.FromArgb(47, 57, 67, 77),
+                Color.FromArgb(49, 59, 69, 79),
+                Color.FromArgb(71, 81, 91, 101),
+                Color.FromArgb(74, 84, 94, 104),
+                Color.FromArgb(77, 87, 97, 107),
+                Color.FromArgb(79, 89, 99, 109),
+                Color.FromArgb(91, 101, 111, 121),
+                Color.FromArgb(94, 104, 114, 124),
+                Color.FromArgb(97, 107, 117, 127),
+                Color.FromArgb(99, 109, 119, 129)
+            };
         }
     }
 }

@@ -36,5 +36,31 @@ namespace System.Drawing
 
             return imageAsArray;
         }
+
+        public static void IterateBitmapByBlocks(this Bitmap image, Size blockSize, Action<Rectangle, Color[]> action)
+        {
+            if (action == null)
+                return;
+
+            int currentX = 0, currentY = 0;
+
+            while (currentY < image.Height)
+            {
+                var width = currentX + blockSize.Width > image.Width ? image.Width - currentX : blockSize.Width;
+                var height = currentY + blockSize.Height > image.Height ? image.Height - currentY : blockSize.Height;
+                var rectangle = new Rectangle(currentX, currentY, width, height);
+                var pixels = image.ToArray(rectangle);
+
+                action(rectangle, pixels);
+
+                currentX += blockSize.Width;
+
+                if (currentX >= image.Width)
+                {
+                    currentX = 0;
+                    currentY += blockSize.Height;
+                }
+            }
+        }
     }
 }
